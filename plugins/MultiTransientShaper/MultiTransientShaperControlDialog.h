@@ -30,6 +30,8 @@
 #include "embed.h"
 #include "GuiApplication.h"
 #include "Knob.h"
+#include "ComboBox.h"
+#include "PixmapButton.h"
 #include "MainWindow.h"
 
 namespace lmms
@@ -53,6 +55,12 @@ public:
 
 	MultiTransientShaperControls* m_controls;
 	
+private:
+	void drawStereoBars(QPainter* p, QPen* pen, int startx, int starty, int width, int height, float* val, float vmin, float vmax);
+	void drawMonoBars(QPainter* p, QPen* pen, int startx, int starty, int width, int height, float val, float vmin, float vmax);
+	void drawEnv(QPainter* p, int startx, int starty, int width, int height, float lhd, float it, float mt, float tt, float ig, float mg, float tg, float time);
+
+
 private slots:
 	void updateDisplay();
 };

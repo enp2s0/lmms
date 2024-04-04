@@ -37,6 +37,7 @@ MultiTransientShaperControls::MultiTransientShaperControls(MultiTransientShaperE
 	m_band12SplitModel(200.0f, 20.0f, 20000.0f, 1.0f, this, tr("Band 1/2 Split Frequency")),
 	m_band23SplitModel(2500.0f, 20.0f, 20000.0f, 1.0f, this, tr("Bans 2/3 Split Frequency")),
 	m_outGainModel(100.0f, 0.0f, 200.0f, 0.1f, this, tr("Output Gain")),
+	m_lookaheadAmtModel(5.0f, 0.0f, 20.0f, 0.1f, this, tr("Lookahead")),
 	m_gain1Model(100.0f, 0.0f, 200.0f, 0.1f, this, tr("Band 1 Gain")),
 	m_gain2Model(100.0f, 0.0f, 200.0f, 0.1f, this, tr("Band 2 Gain")),
 	m_gain3Model(100.0f, 0.0f, 200.0f, 0.1f, this, tr("Band 3 Gain")),
@@ -45,7 +46,8 @@ MultiTransientShaperControls::MultiTransientShaperControls(MultiTransientShaperE
 	m_fastEnv2AModel(50.0f, 0.0f, 1000.0f, 0.1f, this, tr("Band 2 Fast Attack")),
 	m_slowEnv2AModel(500.0f, 0.0f, 1000.0f, 0.1f, this, tr("Band 2 Slow Attack")),
 	m_fastEnv3AModel(50.0f, 0.0f, 1000.0f, 0.1f, this, tr("Band 3 Fast Attack")),
-	m_slowEnv3AModel(500.0f, 0.0f, 1000.0f, 0.1f, this, tr("Band 3 Slow Attack"))
+	m_slowEnv3AModel(500.0f, 0.0f, 1000.0f, 0.1f, this, tr("Band 3 Slow Attack")),
+	m_slowEnv4AModel(500.0f, 0.0f, 1000.0f, 0.1f, this, tr("Input Slow Attack"))
 {
 	for(int i = 0; i < 3; i++)
 	{
@@ -56,6 +58,14 @@ MultiTransientShaperControls::MultiTransientShaperControls(MultiTransientShaperE
 		m_mTimeModels[i] = new FloatModel(200.0f, 0.0f, 3000.0f, 0.1, this, tr("Band Middle Time"));
 		m_tTimeModels[i] = new FloatModel(500.0f, 0.0f, 3000.0f, 0.1, this, tr("Band Tail Time"));
 		m_tolModels[i] = new FloatModel(0.1f, 0.0f, 1.0f, 0.01f, this, tr("Band Transient Tolerance"));
+
+		m_tSources[i] = new ComboBoxModel(this, tr("Trigger Source"));
+		m_tSources[i]->addItem("Band 1");
+		m_tSources[i]->addItem("Band 2");
+		m_tSources[i]->addItem("Band 3");
+		m_tSources[i]->addItem("Input");
+
+		m_monoTriggers[i] = new BoolModel(this);
 	}
 }
 

@@ -39,6 +39,8 @@ public:
 	MultiTransientShaperEffect(Model* parent, const Descriptor::SubPluginFeatures::Key* key);
 	~MultiTransientShaperEffect() override = default;
 	bool processAudioBuffer(sampleFrame* buf, const fpp_t frames) override;
+	int lhbIndex(int sample, int band, int channel);
+
 
 	EffectControls* controls() override
 	{
@@ -55,9 +57,16 @@ private:
 	StereoLinkwitzRiley m_hp12;
 	StereoLinkwitzRiley m_hp23;
 
+	StereoLinkwitzRiley* m_bandlimit[3];
+
 	float m_fastEnv[3][2];
 	float m_slowEnv[3][2];
 	float m_bandState[3][2];
+
+	float* m_lhb;
+	int m_lookaheadLen;
+	int m_lookaheadRead;
+	int m_lookaheadWrite;
 
 	friend class MultiTransientShaperControls;
 };

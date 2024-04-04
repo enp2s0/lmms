@@ -63,6 +63,7 @@ private:
 	FloatModel m_band12SplitModel;
 	FloatModel m_band23SplitModel;
 	FloatModel m_outGainModel;
+	FloatModel m_lookaheadAmtModel;
 
 	FloatModel m_gain1Model;
 	FloatModel m_gain2Model;
@@ -74,6 +75,7 @@ private:
 	FloatModel m_slowEnv2AModel;
 	FloatModel m_fastEnv3AModel;
 	FloatModel m_slowEnv3AModel;
+	FloatModel m_slowEnv4AModel;
 
 	FloatModel* m_iGainModels[3];
 	FloatModel* m_mGainModels[3];
@@ -83,9 +85,13 @@ private:
 	FloatModel* m_tTimeModels[3];
 	FloatModel* m_tolModels[3];
 
+	ComboBoxModel* m_tSources[3];
+	BoolModel* m_monoTriggers[3];
+
 	// GUI return paramters for UI updates
-	float m_r_envDiffs[3][2];
-	float m_r_resGains[3][2];
+	float m_r_envDiffs[4][2];
+	float m_r_resGains[4][2];
+	float m_r_times[4][2];
 
 	friend class gui::MultiTransientShaperControlDialog;
 	friend class MultiTransientShaperEffect;
