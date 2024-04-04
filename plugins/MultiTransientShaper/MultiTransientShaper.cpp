@@ -58,7 +58,8 @@ MultiTransientShaperEffect::MultiTransientShaperEffect(Model* parent, const Desc
 	m_lp12(m_sampleRate),
 	m_lp23(m_sampleRate),
 	m_hp12(m_sampleRate),
-	m_hp23(m_sampleRate)
+	m_hp23(m_sampleRate),
+	m_ap(m_sampleRate)
 {
 	for(int i = 0; i < 3; i++)
 	{
@@ -80,6 +81,8 @@ MultiTransientShaperEffect::MultiTransientShaperEffect(Model* parent, const Desc
 		m_lhb[i] = 0;
 	m_lookaheadRead = 0;
 	m_lookaheadWrite = 0;
+
+	m_ap.setFilterType(BasicFilters<2>::FilterType::AllPass);
 }
 
 int MultiTransientShaperEffect::lhbIndex(int sample, int band, int channel)
@@ -164,7 +167,6 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 		m_mtsControls.m_monoTriggers[1]->value(),
 		m_mtsControls.m_monoTriggers[2]->value()
 	};
-
 	auto bandSources = std::array{
 		m_mtsControls.m_tSources[0]->value(),
 		m_mtsControls.m_tSources[1]->value(),
@@ -176,6 +178,7 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 	m_hp12.setHighpass(band12Split);
 	m_lp23.setLowpass(band23Split);
 	m_hp23.setHighpass(band23Split);
+	m_ap.calcFilterCoeffs(band12Split, 0.70710678118);
 
 	// Adjust response times to be cumulative
 	for(int b = 0; b < 3; b++)
@@ -195,7 +198,10 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 		for(int i = 0; i < 2; i++)
 		{
 			// Low band is lowpassed at 1/2 freq.
+			// It is also allpassed to add 180deg of phase shift to match
+			// the other filters.
 			bands[0][i] = m_lp12.update(s[i], i);
+			bands[0][i] = m_ap.update(bands[0][i], i);
 
 			// Mid band is highpassed at 1/2 freq and lowpassed at 2/3 freq.
 			bands[1][i] = m_hp12.update(s[i], i);
@@ -212,7 +218,7 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 		// iterate through each filter band
 		for(int b = 0; b < 3; b++)
 		{
-			float envDiff[2];
+			float crestFactor[2];
 			auto bs_l = std::array{m_lhb[lhbIndex(m_lookaheadRead, b, 0)], m_lhb[lhbIndex(m_lookaheadRead, b, 1)]};
 
 			// update each envelope follower for this band
@@ -233,11 +239,12 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 				m_slowEnv[b][i] = slowA * (m_slowEnv[b][i] - v) + v;
 
 				// calculate the difference between the fast and slow followers
-				envDiff[i] = std::clamp(m_fastEnv[b][i] - m_slowEnv[b][i], 0.0f, 1.0f);
+				crestFactor[i] = std::clamp(m_fastEnv[b][i] / m_slowEnv[b][i], 0.0f, 50.0f);
 
 				// if the difference exceeds the tolerance, we have a transient in this band,
 				// so reset the band state counter.
-				if(envDiff[i] > bandTols[b] && m_bandState[b][i] > 1000)
+				// don't reset if we're still in the attack phase to prevent spurious triggers
+				if(crestFactor[i] > bandTols[b] && m_bandState[b][i] > (lookahead + bandRespTimes[b][0]))
 				{
 					if(bandMonoModes[b] == true)
 					{
@@ -271,9 +278,6 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 				// now we know the proper gain, but we need to apply it to the
 				// sample in the lookahead buffer, not the one we're currently
 				// working with.
-
-				//auto bs_l = std::array{m_lhb[lhbIndex(m_lookaheadRead, b, 0)], m_lhb[lhbIndex(m_lookaheadRead, b, 1)]};
-
 				bs_l[i] *= resGain;
 
 				// apply master band gain
@@ -283,12 +287,10 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 				m_bandState[b][i] += 1;
 
 				// pass data back to the UI code
-				m_mtsControls.m_r_envDiffs[b][i] = envDiff[i];
+				m_mtsControls.m_r_envDiffs[b][i] = crestFactor[i];
 				m_mtsControls.m_r_resGains[b][i] = resGain;
 				m_mtsControls.m_r_times[b][i] = m_bandState[b][i] * 1000 / m_sampleRate;
 			}
-
-
 
 			bands[b][0] = bs_l[0];
 			bands[b][1] = bs_l[1];

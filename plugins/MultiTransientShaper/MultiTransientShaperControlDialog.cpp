@@ -37,10 +37,10 @@ namespace lmms::gui
 MultiTransientShaperControlDialog::MultiTransientShaperControlDialog(MultiTransientShaperControls* controls) :
 	EffectControlDialog(controls)
 {
-	setAutoFillBackground(true);
-	QPalette pal;
-	pal.setBrush(backgroundRole(), PLUGIN_NAME::getIconPixmap("artwork"));
-	setPalette(pal);
+	//setAutoFillBackground(true);
+	//QPalette pal;
+	//pal.setBrush(backgroundRole(), PLUGIN_NAME::getIconPixmap("artwork"));
+	//setPalette(pal);
 	setFixedSize(600, 600);
 
 	connect(getGUI()->mainWindow(), SIGNAL(periodicUpdate()), this, SLOT(updateDisplay()));
@@ -58,14 +58,14 @@ MultiTransientShaperControlDialog::MultiTransientShaperControlDialog(MultiTransi
 
 	auto makeComboBox = [this](int x, int y, const QString& label, const QString& hintText, ComboBoxModel* model)
 	{
-		ComboBox* newBox = new ComboBox(this);
+		auto newBox = new ComboBox(this);
 		newBox->move(x, y);
 		newBox->setModel(model);
 		return newBox;
 	};
 	auto makePixmapButton = [this](const QString& text, QWidget* parent, int x, int y, BoolModel* model, const QString& activeIcon, const QString& inactiveIcon, const QString& tooltip)
 	{
-		PixmapButton* button = new PixmapButton(parent, text);
+		auto button = new PixmapButton(parent, text);
 		button->move(x, y);
 		button->setCheckable(true);
 		if (model) { button->setModel(model); }
@@ -124,8 +124,8 @@ void MultiTransientShaperControlDialog::paintEvent(QPaintEvent *event)
 	{
 		drawStereoBars(&p, &aPen, 50, 300 + (40 * b), 200, 36, m_controls->m_r_resGains[b], 0, 2);
 		drawMonoBars(&p, &wPen, 50, 300 + (40 * b), 200, 36, 1, 0, 2);
-		drawStereoBars(&p, &cPen, 50, 300 + (40 * b), 200, 36, m_controls->m_r_envDiffs[b], 0, 1);
-		drawMonoBars(&p, &bPen, 50, 300 + (40 * b), 200, 36, m_controls->m_tolModels[b]->value(), 0, 1);
+		drawStereoBars(&p, &cPen, 50, 300 + (40 * b), 200, 36, m_controls->m_r_envDiffs[b], 0, 10);
+		drawMonoBars(&p, &bPen, 50, 300 + (40 * b), 200, 36, m_controls->m_tolModels[b]->value(), 0, 10);
 
 		drawEnv(&p, 50, 430 + (55 * b), 500, 50, 
 			m_controls->m_lookaheadAmtModel.value(),
@@ -169,6 +169,7 @@ void MultiTransientShaperControlDialog::drawEnv(QPainter* p, int startx, int sta
 	QPen yPen(QColor(255, 255, 0, 255), 1);
 	QPen pPen(QColor(255, 0, 255, 255), 1);
 	QPen wPen(QColor(255, 255, 255, 200), 1);
+	QPen gPen(QColor(255, 255, 255, 100), 1);
 	QPen bPen(QColor(0, 0, 255, 200), 1);
 
 	it += lhd;
@@ -176,7 +177,7 @@ void MultiTransientShaperControlDialog::drawEnv(QPainter* p, int startx, int sta
 	tt += mt;
 
 	float gain_to_px = height / 2;
-	float ms_to_px = 500.0 / 2000.0;// width / tt;
+	float ms_to_px = width / tt;
 	float zero_gain = starty + height;
 
 	float p1_x = startx + (lhd * ms_to_px);
@@ -198,6 +199,10 @@ void MultiTransientShaperControlDialog::drawEnv(QPainter* p, int startx, int sta
 
 	p->setPen(wPen);
 	p->drawLine(startx + time, starty, startx + time, starty + height);
+
+	p->setPen(gPen);
+	p->drawLine(startx, zero_gain - gain_to_px, startx + width, zero_gain - gain_to_px);
+	p->drawLine(p1_x, starty, p1_x, starty + height);
 }
 
 void MultiTransientShaperControlDialog::updateDisplay()

@@ -57,7 +57,7 @@ MultiTransientShaperControls::MultiTransientShaperControls(MultiTransientShaperE
 		m_iTimeModels[i] = new FloatModel( 50.0f, 0.0f, 1500.0f, 0.1, this, tr("Band Initial Time"));
 		m_mTimeModels[i] = new FloatModel(200.0f, 0.0f, 3000.0f, 0.1, this, tr("Band Middle Time"));
 		m_tTimeModels[i] = new FloatModel(500.0f, 0.0f, 3000.0f, 0.1, this, tr("Band Tail Time"));
-		m_tolModels[i] = new FloatModel(0.1f, 0.0f, 1.0f, 0.01f, this, tr("Band Transient Tolerance"));
+		m_tolModels[i] = new FloatModel(0.1f, 0.0f, 10.0f, 0.01f, this, tr("Band Transient Tolerance"));
 
 		m_tSources[i] = new ComboBoxModel(this, tr("Trigger Source"));
 		m_tSources[i]->addItem("Band 1");

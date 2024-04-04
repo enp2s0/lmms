@@ -56,7 +56,7 @@ private:
 	StereoLinkwitzRiley m_lp23;
 	StereoLinkwitzRiley m_hp12;
 	StereoLinkwitzRiley m_hp23;
-
+	BasicFilters<2> m_ap;
 	StereoLinkwitzRiley* m_bandlimit[3];
 
 	float m_fastEnv[3][2];
