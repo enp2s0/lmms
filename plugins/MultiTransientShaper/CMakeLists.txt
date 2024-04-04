@@ -1,0 +1,3 @@
+INCLUDE(BuildPlugin)
+
+BUILD_PLUGIN(multitransientshaper MultiTransientShaper.cpp MultiTransientShaperControls.cpp MultiTransientShaperControlDialog.cpp MOCFILES MultiTransientShaperControls.h MultiTransientShaperControlDialog.h EMBEDDED_RESOURCES artwork.png logo.png)

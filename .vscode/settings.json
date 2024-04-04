@@ -1,0 +1,14 @@
+{
+        "files.associations": {
+                "*.isph": "cpp",
+                "*.ipp": "cpp",
+                "*.tcc": "cpp",
+                "chrono": "cpp",
+                "optional": "cpp",
+                "format": "cpp",
+                "system_error": "cpp",
+                "regex": "cpp",
+                "__node_handle": "cpp",
+                "array": "cpp"
+        }
+}
