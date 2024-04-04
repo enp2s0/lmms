@@ -105,28 +105,19 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 	const float outGain = m_mtsControls.m_outGainModel.value() * 0.01f;
 	const int lookahead = m_mtsControls.m_lookaheadAmtModel.value() * m_sampleRate / 1000;
 	auto bandGains = std::array{
-		m_mtsControls.m_gain1Model.value() * 0.01f,
-		m_mtsControls.m_gain2Model.value() * 0.01f,
-		m_mtsControls.m_gain3Model.value() * 0.01f
+		m_mtsControls.m_gainModels[0]->value() * 0.01f,
+		m_mtsControls.m_gainModels[1]->value() * 0.01f,
+		m_mtsControls.m_gainModels[2]->value() * 0.01f
 	};
 	auto bandTols = std::array{
 		m_mtsControls.m_tolModels[0]->value(),
 		m_mtsControls.m_tolModels[1]->value(),
 		m_mtsControls.m_tolModels[2]->value()
 	};
-	auto bandEnvParams = std::array{
-		std::array{
-			m_mtsControls.m_fastEnv1AModel.value(),
-			m_mtsControls.m_slowEnv1AModel.value()
-		},
-		std::array{
-			m_mtsControls.m_fastEnv2AModel.value(),
-			m_mtsControls.m_slowEnv2AModel.value()
-		},
-		std::array{
-			m_mtsControls.m_fastEnv3AModel.value(),
-			m_mtsControls.m_slowEnv3AModel.value()
-		}
+	auto bandEnvAttacks = std::array{
+		m_mtsControls.m_slowEnvAModels[0]->value(),
+		m_mtsControls.m_slowEnvAModels[1]->value(),
+		m_mtsControls.m_slowEnvAModels[2]->value()
 	};
 	auto bandRespGains = std::array{
 		std::array{
@@ -232,7 +223,7 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 					v = std::abs(bands[bandSources[b]][i]);
 
 				// convert and scale attack times from ms to per-sample decay
-				float slowA = std::pow(0.01, 1.0 / (bandEnvParams[b][1] * m_sampleRate * 0.001));
+				float slowA = std::pow(0.01, 1.0 / (bandEnvAttacks[b] * m_sampleRate * 0.001));
 
 				// step the followers forward
 				m_fastEnv[b][i] = v; //fastA * (m_fastEnv[b][i] - v) + v;

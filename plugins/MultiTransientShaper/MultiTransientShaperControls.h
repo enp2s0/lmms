@@ -65,17 +65,8 @@ private:
 	FloatModel m_outGainModel;
 	FloatModel m_lookaheadAmtModel;
 
-	FloatModel m_gain1Model;
-	FloatModel m_gain2Model;
-	FloatModel m_gain3Model;
-
-	FloatModel m_fastEnv1AModel;
-	FloatModel m_slowEnv1AModel;
-	FloatModel m_fastEnv2AModel;
-	FloatModel m_slowEnv2AModel;
-	FloatModel m_fastEnv3AModel;
-	FloatModel m_slowEnv3AModel;
-	FloatModel m_slowEnv4AModel;
+	FloatModel* m_gainModels[3];
+	FloatModel* m_slowEnvAModels[4];
 
 	FloatModel* m_iGainModels[3];
 	FloatModel* m_mGainModels[3];

@@ -79,33 +79,24 @@ MultiTransientShaperControlDialog::MultiTransientShaperControlDialog(MultiTransi
 	makeKnob( 57,  10, tr("2/3 Split"), tr("Band 2/3 Split Frequency:"), "Hz", &controls->m_band23SplitModel, false);
 	makeKnob( 98,  10, tr("Out"), tr("Output Gain:"), "%", &controls->m_outGainModel, true);
 	makeKnob(139,  10, tr("LKHD"), tr("Lookahead:"), "ms", &controls->m_lookaheadAmtModel, true);
-	
-	makeKnob( 16, 120, tr("Gain 1"), tr("Band 1 Gain:"), "%", &controls->m_gain1Model, true);
-	makeKnob( 57, 120, tr("FA 1"), tr("Band 1 Fast Attack: "), "s", &controls->m_fastEnv1AModel, false);
-	makeKnob( 98, 120, tr("SA 1"), tr("Band 1 Slow Attack: "), "s", &controls->m_slowEnv1AModel, false);
-
-	makeKnob( 16, 185, tr("Gain 2"), tr("Band 2 Gain:"), "%", &controls->m_gain2Model, true);
-	makeKnob( 57, 185, tr("FA 2"), tr("Band 2 Fast Attack: "), "s", &controls->m_fastEnv2AModel, false);
-	makeKnob( 98, 185, tr("SA 2"), tr("Band 2 Slow Attack: "), "s", &controls->m_slowEnv2AModel, false);
-
-	makeKnob( 16, 240, tr("Gain 3"), tr("Band 3 Gain:"), "%", &controls->m_gain3Model, true);
-	makeKnob( 57, 240, tr("FA 3"), tr("Band 3 Fast Attack: "), "s", &controls->m_fastEnv3AModel, false);
-	makeKnob( 98, 240, tr("SA 3"), tr("Band 3 Slow Attack: "), "s", &controls->m_slowEnv3AModel, false);
 
 	for(int i = 0; i < 3; i++)
 	{
-		auto y = 120 + (55 * i);
-		makeKnob(    98 + (41 * 1), y, tr("IG"), tr("Band Initial Gain"), "%", (controls->m_iGainModels)[i], true);
-		makeKnob(    98 + (41 * 2), y, tr("MG"), tr("Band Middle Gain"), "%", (controls->m_mGainModels)[i], true);
-		makeKnob(    98 + (41 * 3), y, tr("TG"), tr("Band Tail Gain"), "%", (controls->m_tGainModels)[i], true);
-		makeKnob(    98 + (41 * 4), y, tr("IT"), tr("Band Initial Time"), "ms", (controls->m_iTimeModels)[i], false);
-		makeKnob(    98 + (41 * 5), y, tr("MT"), tr("Band Middle Time"), "ms", (controls->m_mTimeModels)[i], false);
-		makeKnob(    98 + (41 * 6), y, tr("TT"), tr("Band Tail Time"), "ms", (controls->m_tTimeModels)[i], false);
-		makeKnob(    98 + (41 * 7), y, tr("TOL"), tr("Band Tolerance"), "", (controls->m_tolModels)[i], false);
-		makeComboBox(98 + (41 * 8), y, tr("SRC"), tr("Trigger Source"), (controls->m_tSources)[i]);
-		makePixmapButton(tr("Mono Trigger"), this, 98 + (41 * 11), y, (controls->m_monoTriggers)[i], "crossover_led_green", "crossover_led_off", tr("Mono Trigger"));
+		auto y = 65 + (55 * i);
+		makeKnob(    16 + (41 *  1), y, tr("G"), tr("Band ") + QString(i) + tr(" Gain:"), "%", controls->m_gainModels[0], true);
+		makeKnob(    16 + (41 *  2), y, tr("SA"), tr("Band ") + QString(i) + tr(" Slow Attack: "), "s", controls->m_slowEnvAModels[i], false);
+		makeKnob(    16 + (41 *  3), y, tr("IG"), tr("Band ") + QString(i) + tr(" Initial Gain"), "%", (controls->m_iGainModels)[i], true);
+		makeKnob(    16 + (41 *  4), y, tr("MG"), tr("Band ") + QString(i) + tr(" Middle Gain"), "%", (controls->m_mGainModels)[i], true);
+		makeKnob(    16 + (41 *  5), y, tr("TG"), tr("Band ") + QString(i) + tr(" Tail Gain"), "%", (controls->m_tGainModels)[i], true);
+		makeKnob(    16 + (41 *  6), y, tr("IT"), tr("Band ") + QString(i) + tr(" Initial Time"), "ms", (controls->m_iTimeModels)[i], false);
+		makeKnob(    16 + (41 *  7), y, tr("MT"), tr("Band ") + QString(i) + tr(" Middle Time"), "ms", (controls->m_mTimeModels)[i], false);
+		makeKnob(    16 + (41 *  8), y, tr("TT"), tr("Band ") + QString(i) + tr(" Tail Time"), "ms", (controls->m_tTimeModels)[i], false);
+		makeKnob(    16 + (41 *  9), y, tr("TOL"), tr("Band ") + QString(i) + tr(" Tolerance"), "", (controls->m_tolModels)[i], false);
+		makeComboBox(16 + (41 * 10), y, tr("SRC"), tr("Trigger ") + QString(i) + tr(" Source"), (controls->m_tSources)[i]);
+		makePixmapButton(tr("Band ") + QString(i) + tr("Mono Trigger"), this, 98 + (41 * 11), y, (controls->m_monoTriggers)[i], "crossover_led_green", "crossover_led_off", tr("Mono Trigger"));
 	}
 
+	// save the controls pointer so we can access it in paintEvent to render the meters.
 	m_controls = controls;
 }
 
