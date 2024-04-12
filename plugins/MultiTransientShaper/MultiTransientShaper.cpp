@@ -169,7 +169,7 @@ bool MultiTransientShaperEffect::processAudioBuffer(sampleFrame* buf, const fpp_
 	m_hp12.setHighpass(band12Split);
 	m_lp23.setLowpass(band23Split);
 	m_hp23.setHighpass(band23Split);
-	m_ap.calcFilterCoeffs(band12Split, 0.70710678118);
+	m_ap.calcFilterCoeffs(band23Split, 0.70710678118);
 
 	// Adjust response times to be cumulative
 	for(int b = 0; b < 3; b++)

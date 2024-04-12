@@ -31,17 +31,23 @@
 #include <QMouseEvent>
 #include <QPainter>
 
+const int WINDOW_WIDTH	= 600;
+const int WINDOW_HEIGHT = 600;
+
+const int ENV_HEIGHT	= 50;
+const int METER_HEIGHT	= 36;
+const int KNOB_HEIGHT	= 50;
+
+const int BAND_OFFSET	= 10;
+const int BAND_HEIGHT	= ENV_HEIGHT + METER_HEIGHT + KNOB_HEIGHT;
+
 namespace lmms::gui
 {
 
 MultiTransientShaperControlDialog::MultiTransientShaperControlDialog(MultiTransientShaperControls* controls) :
 	EffectControlDialog(controls)
 {
-	//setAutoFillBackground(true);
-	//QPalette pal;
-	//pal.setBrush(backgroundRole(), PLUGIN_NAME::getIconPixmap("artwork"));
-	//setPalette(pal);
-	setFixedSize(600, 600);
+	setFixedSize(WINDOW_WIDTH, WINDOW_HEIGHT);
 
 	connect(getGUI()->mainWindow(), SIGNAL(periodicUpdate()), this, SLOT(updateDisplay()));
 
@@ -75,26 +81,26 @@ MultiTransientShaperControlDialog::MultiTransientShaperControlDialog(MultiTransi
 		return button;
 	};
 
-	makeKnob( 16,  10, tr("1/2 Split"), tr("Band 1/2 Split Frequency:"), "Hz", &controls->m_band12SplitModel, false);
-	makeKnob( 57,  10, tr("2/3 Split"), tr("Band 2/3 Split Frequency:"), "Hz", &controls->m_band23SplitModel, false);
-	makeKnob( 98,  10, tr("Out"), tr("Output Gain:"), "%", &controls->m_outGainModel, true);
-	makeKnob(139,  10, tr("LKHD"), tr("Lookahead:"), "ms", &controls->m_lookaheadAmtModel, true);
-
 	for(int i = 0; i < 3; i++)
 	{
-		auto y = 65 + (55 * i);
-		makeKnob(    16 + (41 *  1), y, tr("G"), tr("Band ") + QString(i) + tr(" Gain:"), "%", controls->m_gainModels[0], true);
-		makeKnob(    16 + (41 *  2), y, tr("SA"), tr("Band ") + QString(i) + tr(" Slow Attack: "), "s", controls->m_slowEnvAModels[i], false);
-		makeKnob(    16 + (41 *  3), y, tr("IG"), tr("Band ") + QString(i) + tr(" Initial Gain"), "%", (controls->m_iGainModels)[i], true);
-		makeKnob(    16 + (41 *  4), y, tr("MG"), tr("Band ") + QString(i) + tr(" Middle Gain"), "%", (controls->m_mGainModels)[i], true);
-		makeKnob(    16 + (41 *  5), y, tr("TG"), tr("Band ") + QString(i) + tr(" Tail Gain"), "%", (controls->m_tGainModels)[i], true);
-		makeKnob(    16 + (41 *  6), y, tr("IT"), tr("Band ") + QString(i) + tr(" Initial Time"), "ms", (controls->m_iTimeModels)[i], false);
-		makeKnob(    16 + (41 *  7), y, tr("MT"), tr("Band ") + QString(i) + tr(" Middle Time"), "ms", (controls->m_mTimeModels)[i], false);
-		makeKnob(    16 + (41 *  8), y, tr("TT"), tr("Band ") + QString(i) + tr(" Tail Time"), "ms", (controls->m_tTimeModels)[i], false);
-		makeKnob(    16 + (41 *  9), y, tr("TOL"), tr("Band ") + QString(i) + tr(" Tolerance"), "", (controls->m_tolModels)[i], false);
-		makeComboBox(16 + (41 * 10), y, tr("SRC"), tr("Trigger ") + QString(i) + tr(" Source"), (controls->m_tSources)[i]);
+		auto y = BAND_OFFSET + ENV_HEIGHT + METER_HEIGHT + (BAND_HEIGHT * i);
+		makeKnob(    BAND_OFFSET + (41 *  1), y, tr("G"), tr("Band ") + QString(i) + tr(" Gain:"), "%", controls->m_gainModels[i], true);
+		makeKnob(    BAND_OFFSET + (41 *  2), y, tr("SA"), tr("Band ") + QString(i) + tr(" Slow Attack: "), "s", controls->m_slowEnvAModels[i], false);
+		makeKnob(    BAND_OFFSET + (41 *  3), y, tr("IG"), tr("Band ") + QString(i) + tr(" Initial Gain"), "%", (controls->m_iGainModels)[i], true);
+		makeKnob(    BAND_OFFSET + (41 *  4), y, tr("MG"), tr("Band ") + QString(i) + tr(" Middle Gain"), "%", (controls->m_mGainModels)[i], true);
+		makeKnob(    BAND_OFFSET + (41 *  5), y, tr("TG"), tr("Band ") + QString(i) + tr(" Tail Gain"), "%", (controls->m_tGainModels)[i], true);
+		makeKnob(    BAND_OFFSET + (41 *  6), y, tr("IT"), tr("Band ") + QString(i) + tr(" Initial Time"), "ms", (controls->m_iTimeModels)[i], false);
+		makeKnob(    BAND_OFFSET + (41 *  7), y, tr("MT"), tr("Band ") + QString(i) + tr(" Middle Time"), "ms", (controls->m_mTimeModels)[i], false);
+		makeKnob(    BAND_OFFSET + (41 *  8), y, tr("TT"), tr("Band ") + QString(i) + tr(" Tail Time"), "ms", (controls->m_tTimeModels)[i], false);
+		makeKnob(    BAND_OFFSET + (41 *  9), y, tr("TOL"), tr("Band ") + QString(i) + tr(" Tolerance"), "", (controls->m_tolModels)[i], false);
+		makeComboBox(BAND_OFFSET + (41 * 10), y, tr("SRC"), tr("Trigger ") + QString(i) + tr(" Source"), (controls->m_tSources)[i]);
 		makePixmapButton(tr("Band ") + QString(i) + tr("Mono Trigger"), this, 98 + (41 * 11), y, (controls->m_monoTriggers)[i], "crossover_led_green", "crossover_led_off", tr("Mono Trigger"));
 	}
+
+	makeKnob( 16,  500, tr("1/2 Split"), tr("Band 1/2 Split Frequency:"), "Hz", &controls->m_band12SplitModel, false);
+	makeKnob( 57,  500, tr("2/3 Split"), tr("Band 2/3 Split Frequency:"), "Hz", &controls->m_band23SplitModel, false);
+	makeKnob( 98,  500, tr("Out"), tr("Output Gain:"), "%", &controls->m_outGainModel, true);
+	makeKnob(139,  500, tr("LKHD"), tr("Lookahead:"), "ms", &controls->m_lookaheadAmtModel, true);
 
 	// save the controls pointer so we can access it in paintEvent to render the meters.
 	m_controls = controls;
@@ -111,14 +117,18 @@ void MultiTransientShaperControlDialog::paintEvent(QPaintEvent *event)
 	QPen cPen(QColor(255, 0, 255, 255), 1);
 	QPen wPen(QColor(255, 255, 255, 200), 1);
 	QPen bPen(QColor(0, 0, 255, 200), 1);
-	for(int b = 0; b < 3; b++)
-	{
-		drawStereoBars(&p, &aPen, 50, 300 + (40 * b), 200, 36, m_controls->m_r_resGains[b], 0, 2);
-		drawMonoBars(&p, &wPen, 50, 300 + (40 * b), 200, 36, 1, 0, 2);
-		drawStereoBars(&p, &cPen, 50, 300 + (40 * b), 200, 36, m_controls->m_r_envDiffs[b], 0, 10);
-		drawMonoBars(&p, &bPen, 50, 300 + (40 * b), 200, 36, m_controls->m_tolModels[b]->value(), 0, 10);
 
-		drawEnv(&p, 50, 430 + (55 * b), 500, 50, 
+	int meter_width = (WINDOW_WIDTH - (2 * BAND_OFFSET)) / 2;
+
+	for(int b = 0; b < 3; b++)
+	{		
+		drawStereoBars(&p, &cPen, BAND_OFFSET, BAND_OFFSET + (BAND_HEIGHT * b), meter_width, METER_HEIGHT, m_controls->m_r_envDiffs[b], 0, 10);
+		drawMonoBars(&p, &bPen, BAND_OFFSET, BAND_OFFSET + (BAND_HEIGHT * b), meter_width, METER_HEIGHT, m_controls->m_tolModels[b]->value(), 0, 10);
+		
+		drawStereoBars(&p, &aPen, WINDOW_WIDTH / 2, BAND_OFFSET + (BAND_HEIGHT * b), meter_width, METER_HEIGHT, m_controls->m_r_resGains[b], 0, 2);
+		drawMonoBars(&p, &wPen, WINDOW_WIDTH / 2, BAND_OFFSET + (BAND_HEIGHT * b), meter_width, METER_HEIGHT, 1, 0, 2);
+
+		drawEnv(&p, BAND_OFFSET, BAND_OFFSET + METER_HEIGHT + (BAND_HEIGHT * b), 500, ENV_HEIGHT, 
 			m_controls->m_lookaheadAmtModel.value(),
 			m_controls->m_iTimeModels[b]->value(),
 			m_controls->m_mTimeModels[b]->value(),
@@ -126,7 +136,8 @@ void MultiTransientShaperControlDialog::paintEvent(QPaintEvent *event)
 			m_controls->m_iGainModels[b]->value(),
 			m_controls->m_mGainModels[b]->value(),
 			m_controls->m_tGainModels[b]->value(),
-			m_controls->m_r_times[b][0]);
+			m_controls->m_r_times[b][0],
+			m_controls->m_gainModels[b]->value());
 	}
 
 	p.end();
@@ -155,7 +166,7 @@ void MultiTransientShaperControlDialog::drawStereoBars(QPainter* p, QPen* pen, i
 	}
 }
 
-void MultiTransientShaperControlDialog::drawEnv(QPainter* p, int startx, int starty, int width, int height, float lhd, float it, float mt, float tt, float ig, float mg, float tg, float time)
+void MultiTransientShaperControlDialog::drawEnv(QPainter* p, int startx, int starty, int width, int height, float lhd, float it, float mt, float tt, float ig, float mg, float tg, float time, float gain)
 {
 	QPen yPen(QColor(255, 255, 0, 255), 1);
 	QPen pPen(QColor(255, 0, 255, 255), 1);
@@ -178,12 +189,14 @@ void MultiTransientShaperControlDialog::drawEnv(QPainter* p, int startx, int sta
 	
 	time *= ms_to_px;
 
-	ig = ig / 100 * gain_to_px;
-	mg = mg / 100 * gain_to_px;
-	tg = tg / 100 * gain_to_px;
+	ig = (ig * gain / 100) / 100 * gain_to_px;
+	mg = (mg * gain / 100) / 100 * gain_to_px;
+	tg = (tg * gain / 100) / 100 * gain_to_px;
+
+	float st = (gain / 100) * gain_to_px;
 
 	p->setPen(yPen);
-	p->drawLine(startx, zero_gain - gain_to_px, p1_x, zero_gain - ig);
+	p->drawLine(startx, zero_gain - st, p1_x, zero_gain - ig);
 	p->drawLine(p1_x, zero_gain - ig, p2_x, zero_gain - mg);
 	p->drawLine(p2_x, zero_gain - mg, p3_x, zero_gain - mg);
 	p->drawLine(p3_x, zero_gain - mg, p4_x, zero_gain - tg);

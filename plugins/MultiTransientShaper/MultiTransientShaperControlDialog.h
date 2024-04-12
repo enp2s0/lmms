@@ -58,8 +58,7 @@ public:
 private:
 	void drawStereoBars(QPainter* p, QPen* pen, int startx, int starty, int width, int height, float* val, float vmin, float vmax);
 	void drawMonoBars(QPainter* p, QPen* pen, int startx, int starty, int width, int height, float val, float vmin, float vmax);
-	void drawEnv(QPainter* p, int startx, int starty, int width, int height, float lhd, float it, float mt, float tt, float ig, float mg, float tg, float time);
-
+	void drawEnv(QPainter* p, int startx, int starty, int width, int height, float lhd, float it, float mt, float tt, float ig, float mg, float tg, float time, float gain);
 
 private slots:
 	void updateDisplay();
