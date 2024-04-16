@@ -44,9 +44,9 @@ MultiTransientShaperControls::MultiTransientShaperControls(MultiTransientShaperE
 		m_gainModels[i] = new FloatModel(100.0f, 0.0f, 200.0f, 0.1f, this, tr("Band ") + QString(i) + tr(" Gain"));
 		m_slowEnvAModels[i] = new FloatModel(500.0f, 0.0f, 1000.0f, 0.1f, this, tr("Band ") + QString(i) + tr(" Envelope Follower Attack"));
 
-		m_iGainModels[i] = new FloatModel(100.0f, 0.0f,  200.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Initial Gain"));
-		m_mGainModels[i] = new FloatModel(100.0f, 0.0f,  200.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Middle Gain"));
-		m_tGainModels[i] = new FloatModel(100.0f, 0.0f,  200.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Tail Gain"));
+		m_iGainModels[i] = new FloatModel(100.0f, 0.0f,  800.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Initial Gain"));
+		m_mGainModels[i] = new FloatModel(100.0f, 0.0f,  800.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Middle Gain"));
+		m_tGainModels[i] = new FloatModel(100.0f, 0.0f,  800.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Tail Gain"));
 		m_iTimeModels[i] = new FloatModel( 50.0f, 0.0f, 1500.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Initial Time"));
 		m_mTimeModels[i] = new FloatModel(200.0f, 0.0f, 3000.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Middle Time"));
 		m_tTimeModels[i] = new FloatModel(500.0f, 0.0f, 3000.0f, 0.1, this, tr("Band ") + QString(i) + tr(" Tail Time"));
