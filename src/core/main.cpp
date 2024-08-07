@@ -741,13 +741,6 @@ int main( int argc, char * * argv )
 	// override it with bundled/custom one, if exists
 	loadTranslation(QString("qt_") + pos, ConfigManager::inst()->localeDir());
 
-#ifdef LMMS_BUILD_WIN32
-	if( !SetPriorityClass( GetCurrentProcess(), HIGH_PRIORITY_CLASS ) )
-	{
-		printf( "Notice: could not set high priority.\n" );
-	}
-#endif
-
 #if _POSIX_C_SOURCE >= 1 || _XOPEN_SOURCE || _POSIX_SOURCE
 	struct sigaction sa;
 	sa.sa_handler = SIG_IGN;
