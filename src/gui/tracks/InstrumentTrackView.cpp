@@ -82,14 +82,14 @@ InstrumentTrackView::InstrumentTrackView( InstrumentTrack * _it, TrackContainerV
 	m_volumeKnob->setVolumeKnob( true );
 	m_volumeKnob->setModel( &_it->m_volumeModel );
 	m_volumeKnob->setHintText( tr( "Volume:" ), "%" );
-	m_volumeKnob->setLabel( tr( "VOL" ) );
+	//m_volumeKnob->setLabel( tr( "VOL" ) );
 	m_volumeKnob->show();
 
 	m_panningKnob = new Knob( KnobType::Small17, getTrackSettingsWidget(),
 							tr( "Panning" ) );
 	m_panningKnob->setModel( &_it->m_panningModel );
 	m_panningKnob->setHintText(tr("Panning:"), "%");
-	m_panningKnob->setLabel( tr( "PAN" ) );
+	//m_panningKnob->setLabel( tr( "PAN" ) );
 	m_panningKnob->show();
 
 	m_midiMenu = new QMenu( tr( "MIDI" ), this );
@@ -149,9 +149,9 @@ InstrumentTrackView::InstrumentTrackView( InstrumentTrack * _it, TrackContainerV
 	layout->setSpacing(0);
 	layout->addWidget(m_tlb);
 	layout->addWidget(m_mixerChannelNumber);
-	layout->addWidget(m_activityIndicator);
 	layout->addWidget(m_volumeKnob);
 	layout->addWidget(m_panningKnob);
+	layout->addWidget(m_activityIndicator);
 	masterLayout->addLayout(layout);
 	masterLayout->addSpacerItem(new QSpacerItem(0, 0, QSizePolicy::Minimum, QSizePolicy::Expanding));
 
